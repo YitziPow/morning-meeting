@@ -48,6 +48,7 @@ const App = () => {
   const [morningAnnounceLink, setMorningAnnounceLink] = useState('https://drive.google.com/drive/folders/1J7-Oi8Xo9k7YqerOxjwKzx8c9ib0GD9s');
   const [seatingChartUrl, setSeatingChartUrl] = useState('https://www.canva.com/design/DAG2oB1ugvY/ddVUcEVIgrmAJkcInHIjRw/edit');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const loadData = () => {
       try {
@@ -136,6 +137,33 @@ const App = () => {
     const newSchedule = [...schedule];
     newSchedule[index] = { ...newSchedule[index], [field]: value };
     setSchedule(newSchedule);
+  };
+
+  useEffect(() => {
+    let interval;
+    if (timerActive && timerSeconds > 0) {
+      interval = setInterval(() => {
+        setTimerSeconds(prev => prev - 1);
+      }, 1000);
+    } else if (timerSeconds === 0 && timerActive) {
+      setTimerActive(false);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timerSeconds]);
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const setTimer = () => {
+    const mins = parseInt(timerInput, 10);
+    if (!isNaN(mins) && mins > 0) {
+      setTimerSeconds(mins * 60);
+      setTimerActive(true);
+      setTimerInput('');
+    }
   };
 
   const pages = [
@@ -579,33 +607,6 @@ const App = () => {
       )
     }
   ];
-
-  useEffect(() => {
-    let interval;
-    if (timerActive && timerSeconds > 0) {
-      interval = setInterval(() => {
-        setTimerSeconds(prev => prev - 1);
-      }, 1000);
-    } else if (timerSeconds === 0 && timerActive) {
-      setTimerActive(false);
-    }
-    return () => clearInterval(interval);
-  }, [timerActive, timerSeconds]);
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const setTimer = () => {
-    const mins = parseInt(timerInput, 10);
-    if (!isNaN(mins) && mins > 0) {
-      setTimerSeconds(mins * 60);
-      setTimerActive(true);
-      setTimerInput('');
-    }
-  };
 
   return (
     <div style={{ 
