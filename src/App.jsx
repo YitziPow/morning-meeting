@@ -15,10 +15,9 @@ const App = () => {
   // Content state
   const [cycleDay, setCycleDay] = useState(1);
   const [dailyContent, setDailyContent] = useState({
-    wouldYouRather: null,
-    trueFalse: null,
-    funFact: null,
-    weather: 'Sunny and bright!',
+    wouldYouRather: 'Would you rather have socks that never need washing or shoes that always fit perfectly?',
+    trueFalse: 'True or False: Octopuses have three hearts.',
+    funFact: 'The smell of freshly cut grass is actually a chemical defense mechanism of the plant!',
     daysOfSchool: 0
   });
   
@@ -40,9 +39,10 @@ const App = () => {
       setTimerActive(false);
     }
     return () => clearInterval(interval);
-}, [timerActive, timerSeconds, seatingChartUrl, deskAssignmentsUrl, morningAnnounceLink]);
+  }, [timerActive, timerSeconds]);
   
   // Load persisted data on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -50,9 +50,9 @@ const App = () => {
         if (stored) {
           const data = JSON.parse(stored);
           setCycleDay(data.cycleDay || 1);
-          setSeatingChartUrl(data.seatingChartUrl || seatingChartUrl);
-          setDeskAssignmentsUrl(data.deskAssignmentsUrl || deskAssignmentsUrl);
-          setMorningAnnounceLink(data.morningAnnounceLink || morningAnnounceLink);
+          setSeatingChartUrl(data.seatingChartUrl);
+          setDeskAssignmentsUrl(data.deskAssignmentsUrl);
+          setMorningAnnounceLink(data.morningAnnounceLink);
         }
       } catch (e) {
         console.log('First load or storage error');
@@ -123,7 +123,7 @@ const App = () => {
   };
   
   const setTimer = () => {
-    const mins = parseInt(timerInput);
+    const mins = parseInt(timerInput, 10);
     if (!isNaN(mins) && mins > 0) {
       setTimerSeconds(mins * 60);
       setTimerActive(true);
@@ -186,11 +186,11 @@ const App = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', fontSize: '16px' }}>
           <div style={{ padding: '1rem', background: '#f5f5f5', borderRadius: '12px' }}>
             <div style={{ fontSize: '12px', color: '#666', marginBottom: '0.5rem' }}>FUN FACT</div>
-            <div>{dailyContent.funFact || 'Loading...'}</div>
+            <div>{dailyContent.funFact}</div>
           </div>
           <div style={{ padding: '1rem', background: '#f5f5f5', borderRadius: '12px' }}>
             <div style={{ fontSize: '12px', color: '#666', marginBottom: '0.5rem' }}>WOULD YOU RATHER</div>
-            <div>{dailyContent.wouldYouRather || 'Loading...'}</div>
+            <div>{dailyContent.wouldYouRather}</div>
           </div>
           <div style={{ padding: '1rem', background: '#f5f5f5', borderRadius: '12px' }}>
             <div style={{ fontSize: '12px', color: '#666', marginBottom: '0.5rem' }}>TRUE OR FALSE</div>
@@ -207,7 +207,7 @@ const App = () => {
       title: 'To Be Added Later',
       content: (
         <div style={{ textAlign: 'center', fontSize: '20px', color: '#666' }}>
-          Heggerty Music Program<br/><br/>Coming Soon
+          Heggerty Music Program<br /><br />Coming Soon
         </div>
       )
     },
