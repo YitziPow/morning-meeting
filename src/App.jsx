@@ -7,12 +7,10 @@ const App = () => {
   const [passwordAttempt, setPasswordAttempt] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
-  // Timer state
   const [timerSeconds, setTimerSeconds] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [timerInput, setTimerInput] = useState('');
   
-  // Content state
   const [cycleDay, setCycleDay] = useState(1);
   const [dailyContent, setDailyContent] = useState({
     wouldYouRather: 'Would you rather have socks that never need washing or shoes that always fit perfectly?',
@@ -25,10 +23,8 @@ const App = () => {
   const [deskAssignmentsUrl, setDeskAssignmentsUrl] = useState('https://www.canva.com/design/DAG9efoLlyQ/QC6DODkvaUuOzXF9IUp45A/edit?utm_content=DAG9efoLlyQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton');
   const [morningAnnounceLink, setMorningAnnounceLink] = useState('https://drive.google.com/drive/folders/1J7-Oi8Xo9k7YqerOxjwKzx8c9ib0GD9s');
   
-  // Specials rotation
   const specials = ['Library', 'STEM', 'Art', 'Music', 'PE', 'Library'];
   
-  // Timer effect
   useEffect(() => {
     let interval;
     if (timerActive && timerSeconds > 0) {
@@ -41,10 +37,9 @@ const App = () => {
     return () => clearInterval(interval);
   }, [timerActive, timerSeconds]);
   
-  // Load persisted data on mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    const loadData = async () => {
+    const loadData = () => {
       try {
         const stored = localStorage.getItem('morning_meeting_data');
         if (stored) {
@@ -55,44 +50,18 @@ const App = () => {
           setMorningAnnounceLink(data.morningAnnounceLink);
         }
       } catch (e) {
-        console.log('First load or storage error');
+        console.log('Storage error');
       }
-      
-      // Fetch daily content
-      fetchDailyContent();
     };
     loadData();
   }, []);
   
-  const fetchDailyContent = async () => {
-    try {
-      // Fetch would you rather
-      const wyResponse = await fetch('https://api.api-ninjas.com/v1/riddles?limit=1');
-      const wyData = wyResponse.ok ? await wyResponse.json() : null;
-      
-      // Fetch fun fact
-      const ffResponse = await fetch('https://uselessfacts.jsoup.com/random.json?language=en');
-      const ffData = ffResponse.ok ? await ffResponse.json() : null;
-      
-      setDailyContent(prev => ({
-        ...prev,
-        wouldYouRather: wyData?.riddles?.[0]?.question || 'Would you rather have socks that never need washing or shoes that always fit perfectly?',
-        trueFalse: 'True or False: Octopuses have three hearts.',
-        funFact: ffData?.text || 'The smell of freshly cut grass is actually a chemical defense mechanism of the plant!',
-        daysOfSchool: calculateDaysOfSchool()
-      }));
-    } catch (e) {
-      console.log('Content fetch error, using defaults');
-    }
-  };
-  
   const calculateDaysOfSchool = () => {
-    const schoolStart = new Date(2026, 7, 26); // Aug 26, 2026
+    const schoolStart = new Date(2026, 7, 26);
     const today = new Date();
     const diff = today - schoolStart;
     const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
     
-    // Count only school days (Mon-Fri)
     let schoolDays = 0;
     for (let i = 0; i < days; i++) {
       const d = new Date(schoolStart);
@@ -102,7 +71,7 @@ const App = () => {
     return schoolDays;
   };
   
-  const saveData = async () => {
+  const saveData = () => {
     const data = {
       cycleDay,
       seatingChartUrl,
@@ -197,7 +166,7 @@ const App = () => {
             <div>{dailyContent.trueFalse}</div>
           </div>
           <div style={{ padding: '1rem', background: '#f5f5f5', borderRadius: '12px', textAlign: 'center' }}>
-            <div style={{ fontSize: '32px', fontWeight: 500, color: '#0066cc' }}>{dailyContent.daysOfSchool}</div>
+            <div style={{ fontSize: '32px', fontWeight: 500, color: '#0066cc' }}>{calculateDaysOfSchool()}</div>
             <div style={{ fontSize: '12px', color: '#666' }}>days of school so far!</div>
           </div>
         </div>
@@ -207,7 +176,7 @@ const App = () => {
       title: 'To Be Added Later',
       content: (
         <div style={{ textAlign: 'center', fontSize: '20px', color: '#666' }}>
-          Heggerty Music Program<br /><br />Coming Soon
+          Heggerty Music Program<br />Coming Soon
         </div>
       )
     },
@@ -239,7 +208,6 @@ const App = () => {
   
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto', background: '#fafafa', minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      {/* Timer in corner */}
       <div style={{ position: 'fixed', top: '1rem', right: '1rem', background: 'white', padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '14px', border: '1px solid #ddd', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
         {timerActive ? (
           <div style={{ fontSize: '18px', fontWeight: 500, color: '#d9534f' }}>
@@ -250,7 +218,6 @@ const App = () => {
         )}
       </div>
       
-      {/* Main slide display */}
       <div style={{ background: 'white', borderRadius: '16px', padding: '2rem', minHeight: '400px', marginBottom: '2rem', border: '1px solid #ddd', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 500, marginBottom: '1.5rem', color: '#000' }}>
           {slides[currentSlide].title}
@@ -258,7 +225,6 @@ const App = () => {
         {slides[currentSlide].content}
       </div>
       
-      {/* Controls */}
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         <button
           onClick={() => setCurrentSlide(Math.max(0, currentSlide - 1))}
@@ -313,7 +279,6 @@ const App = () => {
         </button>
       </div>
       
-      {/* Timer controls */}
       <div style={{ background: 'white', borderRadius: '12px', padding: '1rem', marginBottom: '2rem', border: '1px solid #ddd' }}>
         <div style={{ fontSize: '14px', fontWeight: 500, marginBottom: '0.75rem' }}>Set Timer (minutes)</div>
         <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -365,7 +330,6 @@ const App = () => {
         </div>
       </div>
       
-      {/* Cycle Day + Admin toggle */}
       <div style={{ background: 'white', borderRadius: '12px', padding: '1rem', border: '1px solid #ddd', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
           <div>
@@ -401,7 +365,6 @@ const App = () => {
         </div>
       </div>
       
-      {/* Admin Panel */}
       {showAdmin && !isLoggedIn && (
         <div style={{ marginBottom: '2rem', background: 'white', borderRadius: '12px', padding: '1rem', border: '1px solid #ddd' }}>
           <div style={{ fontSize: '14px', fontWeight: 500, marginBottom: '1rem' }}>Admin Password</div>
