@@ -48,28 +48,6 @@ const App = () => {
   const [morningAnnounceLink, setMorningAnnounceLink] = useState('https://drive.google.com/drive/folders/1J7-Oi8Xo9k7YqerOxjwKzx8c9ib0GD9s');
   const [seatingChartUrl, setSeatingChartUrl] = useState('https://www.canva.com/design/DAG2oB1ugvY/ddVUcEVIgrmAJkcInHIjRw/edit');
 
-useEffect(() => {
-    const loadFromStorage = () => {
-      const stored = localStorage.getItem('morning_meeting_full_data');
-      if (stored) {
-        try {
-          const data = JSON.parse(stored);
-          if (data.cycleDay) setCycleDay(data.cycleDay);
-          if (data.seatingChart) setSeatingChart(data.seatingChart);
-          if (data.deskAssignments) setDeskAssignments(data.deskAssignments);
-          if (data.schedule) setSchedule(data.schedule);
-          if (data.heggerty) setHeggerty(data.heggerty);
-          if (data.musicUrl) setMusicUrl(data.musicUrl);
-          if (data.morningAnnounceLink) setMorningAnnounceLink(data.morningAnnounceLink);
-          if (data.seatingChartUrl) setSeatingChartUrl(data.seatingChartUrl);
-        } catch (_) {
-          console.log('Storage error');
-        }
-      }
-    };
-    loadFromStorage();
-  }, []);
-  
   const saveData = () => {
     const data = {
       cycleDay,
