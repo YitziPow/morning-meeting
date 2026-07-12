@@ -48,6 +48,7 @@ const App = () => {
   const [morningAnnounceLink, setMorningAnnounceLink] = useState('https://drive.google.com/drive/folders/1J7-Oi8Xo9k7YqerOxjwKzx8c9ib0GD9s');
   const [seatingChartUrl, setSeatingChartUrl] = useState('https://www.canva.com/design/DAG2oB1ugvY/ddVUcEVIgrmAJkcInHIjRw/edit');
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     try {
       const stored = localStorage.getItem('morning_meeting_full_data');
@@ -66,7 +67,7 @@ const App = () => {
       console.log('Storage error');
     }
   }, []);
-
+  
   const saveData = () => {
     const data = {
       cycleDay,
