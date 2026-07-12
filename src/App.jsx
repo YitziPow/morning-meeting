@@ -4,7 +4,6 @@ import './App.css';
 const App = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showAdmin, setShowAdmin] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
   const [passwordAttempt, setPasswordAttempt] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   
@@ -41,7 +40,7 @@ const App = () => {
       setTimerActive(false);
     }
     return () => clearInterval(interval);
-  }, [timerActive, timerSeconds]);
+}, [timerActive, timerSeconds, seatingChartUrl, deskAssignmentsUrl, morningAnnounceLink]);
   
   // Load persisted data on mount
   useEffect(() => {
