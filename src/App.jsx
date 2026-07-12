@@ -12,7 +12,7 @@ const App = () => {
   const [timerInput, setTimerInput] = useState('');
   
   const [cycleDay, setCycleDay] = useState(1);
-  const [dailyContent, setDailyContent] = useState({
+  const [dailyContent] = useState({
     wouldYouRather: 'Would you rather have socks that never need washing or shoes that always fit perfectly?',
     trueFalse: 'True or False: Octopuses have three hearts.',
     funFact: 'The smell of freshly cut grass is actually a chemical defense mechanism of the plant!',
@@ -49,7 +49,7 @@ const App = () => {
           setDeskAssignmentsUrl(data.deskAssignmentsUrl);
           setMorningAnnounceLink(data.morningAnnounceLink);
         }
-      } catch (e) {
+      } catch (_) {
         console.log('Storage error');
       }
     };
@@ -81,7 +81,7 @@ const App = () => {
     try {
       localStorage.setItem('morning_meeting_data', JSON.stringify(data));
       alert('Changes saved!');
-    } catch (e) {
+    } catch (_) {
       alert('Could not save changes');
     }
   };
